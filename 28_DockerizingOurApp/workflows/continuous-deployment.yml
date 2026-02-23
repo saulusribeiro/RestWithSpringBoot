@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - "master"
-        
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -26,7 +26,7 @@ jobs:
         cache: maven
 
     - name: Build Application .jar
-      working-directory: ./28_DockerizingOurApp/rest-with-spring-boot-and-java-erudio
+      working-directory: ./28_DockerizingOurApp/rest-with-spring-boot-and-java
       run: mvn clean package
 
     - name: Docker Compose Build
@@ -35,7 +35,7 @@ jobs:
 
     - name: Push to Docker Hub Container Registry
       run: |
-        docker tag ${{ secrets.DOCKER_USERNAME }}/rest-with-spring-boot-erudio:latest ${{ secrets.DOCKER_USERNAME }}/rest-with-spring-boot-erudio:${{ github.run_id }}
+        docker tag ${{ secrets.DOCKER_USERNAME }}/rest-with-spring-boot:latest ${{ secrets.DOCKER_USERNAME }}/rest-with-spring-boot:${{ github.run_id }}
         
-        docker push ${{ secrets.DOCKER_USERNAME }}/rest-with-spring-boot-erudio:latest
-        docker push ${{ secrets.DOCKER_USERNAME }}/rest-with-spring-boot-erudio:${{ github.run_id }}
+        docker push ${{ secrets.DOCKER_USERNAME }}/rest-with-spring-boot:latest
+        docker push ${{ secrets.DOCKER_USERNAME }}/rest-with-spring-boot:${{ github.run_id }}
