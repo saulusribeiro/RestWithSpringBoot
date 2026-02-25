@@ -30,12 +30,15 @@ jobs:
       run: mvn clean package
 
     - name: Docker Compose Build
+      # Ajustamos o diretório de trabalho para onde o docker-compose.yml reside
       working-directory: ./28_DockerizingOurApp
       run: docker compose build
 
     - name: Push to Docker Hub Container Registry
+      # Importante: O comando de tag e push deve referenciar a imagem correta
       run: |
-        docker tag ${{ secrets.DOCKER_USERNAME }}/rest-with-spring-boot:latest ${{ secrets.DOCKER_USERNAME }}/rest-with-spring-boot:${{ github.run_id }}
+        docker tag saulusribeiro/rest-with-spring-boot:latest ${{ secrets.DOCKER_USERNAME }}/rest-with-spring-boot:latest
+        docker tag saulusribeiro/rest-with-spring-boot:latest ${{ secrets.DOCKER_USERNAME }}/rest-with-spring-boot:${{ github.run_id }}
         
         docker push ${{ secrets.DOCKER_USERNAME }}/rest-with-spring-boot:latest
         docker push ${{ secrets.DOCKER_USERNAME }}/rest-with-spring-boot:${{ github.run_id }}
