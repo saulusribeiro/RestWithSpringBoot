@@ -10,35 +10,38 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout Repository
+      [cite_start]uses: actions/checkout@v4 [cite: 1]
 
     - name: Login to Docker Hub
-      uses: docker/login-action@v3
+      [cite_start]uses: docker/login-action@v3 [cite: 1]
       with:
         username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_ACCESS_TOKEN}}
+        password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
 
     - name: Setup Java 21
-      uses: actions/setup-java@v2
+      uses: actions/setup-java@v4 # Atualizado para v4 para melhor performance
       with:
         java-version: '21'
-        distribution: 'adopt'
+        distribution: 'temurin' # Alterado para temurin para dar match com seu Dockerfile
         cache: maven
 
-    - name: Build Application .jar
-      working-directory: ./28_DockerizingOurApp/rest-with-spring-boot-and-java
+    - name: Build Application .jar with Maven
+      # Entra na pasta do código fonte para gerar o artefato
+      [cite_start]working-directory: ./28_DockerizingOurApp/rest-with-spring-boot-and-java [cite: 1]
       run: mvn clean package
 
     - name: Docker Compose Build
-      # Ajustamos o diretório de trabalho para onde o docker-compose.yml reside
-      working-directory: ./28_DockerizingOurApp
+      # Entra na pasta onde está o docker-compose.yml 
+      [cite_start]working-directory: ./28_DockerizingOurApp [cite: 1]
       run: docker compose build
 
     - name: Push to Docker Hub Container Registry
-      # Importante: O comando de tag e push deve referenciar a imagem correta
       run: |
-        docker tag saulusribeiro/rest-with-spring-boot:latest ${{ secrets.DOCKER_USERNAME }}/rest-with-spring-boot:latest
-        docker tag saulusribeiro/rest-with-spring-boot:latest ${{ secrets.DOCKER_USERNAME }}/rest-with-spring-boot:${{ github.run_id }}
+        # Tagging a imagem gerada pelo compose para o seu repositório pessoal 
+        docker tag saulusribeiro/rest-with-spring-boot:latest ${{ secrets.DOCKER_USERNAME }}/rest-with-spring-boot:latest 
+        docker tag saulusribeiro/rest-with-spring-boot:latest ${{ secrets.DOCKER_USERNAME }}/rest-with-spring-boot:${{ github.run_id }} 
         
-        docker push ${{ secrets.DOCKER_USERNAME }}/rest-with-spring-boot:latest
-        docker push ${{ secrets.DOCKER_USERNAME }}/rest-with-spring-boot:${{ github.run_id }}
+        # Upload das imagens
+        [cite_start]docker push ${{ secrets.DOCKER_USERNAME }}/rest-with-spring-boot:latest [cite: 1]
+        [cite_start]docker push ${{ secrets.DOCKER_USERNAME }}/rest-with-spring-boot:${{ github.run_id }} [cite: 1]
