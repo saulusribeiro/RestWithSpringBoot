@@ -30,13 +30,8 @@ jobs:
       run: mvn clean package
 
     - name: Docker Compose Build
-      working-directory: ./28_DockerizingOurApp/rest-with-spring-boot-and-java
+      working-directory: ./28_DockerizingOurApp
       run: docker compose build
-
-    - name: Build com Docker Compose
-      run: |
-        cd 28_DockerizingOurApp
-        docker compose up --build -d 
 
     - name: Push to Docker Hub Container Registry
       run: |
